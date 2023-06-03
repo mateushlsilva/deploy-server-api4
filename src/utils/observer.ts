@@ -1,10 +1,9 @@
-import * as nodemailer from 'nodemailer';
 require('dotenv').config();
 
 
 // Interface Observer
 interface Observer {
-    update(): void;
+    update(email: string, status: string, titulo: string): void;
 }
 
 // Classe ConcreteSubject
@@ -22,9 +21,9 @@ class ConcreteSubject {
         }
     }
 
-    public notifyObservers(): void {
+    public notifyObservers(email: string, status: string, titulo: string): void {
         console.log('Subject: Notifying observers...');
-        this.observers.forEach((observer) => observer.update());
+        this.observers.forEach((observer) => observer.update(email, status, titulo));
     }
 }
 
@@ -40,7 +39,7 @@ class UserObserver implements Observer {
         this.titulo = titulo;
     }
 
-    public update(): void {
+    public update(email: string, status: string, titulo: string): void {
 
         let nodemailer = require('nodemailer');
 
@@ -58,11 +57,11 @@ class UserObserver implements Observer {
         });
 
         var mailOptions = {
-            from: '"Equipe Peônia - Ionichealth" <peonia-api@outlook.com>', // sender address (who sends)
+            from: '"Equipe Peônia - Ionic health" <peonia-api@outlook.com>', // sender address (who sends)
             to: this.email, // list of receivers (who receives)
-            subject: 'Ionichealth - Atualização de status de chamado ', // Subject line
+            subject: 'Ionic health - Atualização de status de chamado ', // Subject line
             text: 'Olá', // plaintext body
-            html: `<p>Olá, </p><p> Gentileza notar que o seu chamado <strong>${this.titulo}</strong> teve seu status alterado para: <strong>${this.status}</strong>.</p><p>Caso existam dúvidas, favor entrar em contato com o atendimento ao cliente <a href="https://pt-br.ionic.health/contato" target="_blank">clicando aqui</a>.</p><p>Atenciosamente,</p><p>Equipe Peonia - Ionichealth.</p>` // html body
+            html: `<p>Olá, </p><p> Gentileza notar que o seu chamado <strong>${this.titulo}</strong> teve seu status alterado para: <strong>${this.status}</strong>.</p><p>Caso existam dúvidas, favor entrar em contato com o atendimento ao cliente <a href="https://pt-br.ionic.health/contato" target="_blank">clicando aqui</a>.</p><p>Atenciosamente,</p><p>Equipe Peonia - Ionic health.</p>` // html body
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
